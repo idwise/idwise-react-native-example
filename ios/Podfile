@@ -1,10 +1,21 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '11.0'
+source 'https://cdn.cocoapods.org/'
+source 'https://github.com/idwise/ios-sdk'
+
+#platform :ios, '11.0'
+install! 'cocoapods', :deterministic_uuids => false
+
+plugin 'cocoapods-user-defined-build-types', {
+  verbose: true
+}
+enable_user_defined_build_types!
 
 target 'idwiseReactNativeSample' do
   config = use_native_modules!
+
+  pod 'IDWise', :build_type => :dynamic_framework
 
   use_react_native!(
     :path => config[:reactNativePath],

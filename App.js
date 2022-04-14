@@ -8,6 +8,7 @@
 
 import React, { useEffect } from 'react';
 import type {Node} from 'react';
+import {Platform} from 'react-native';
 import { NativeEventEmitter, NativeModules, Button, View, Text, Image } from 'react-native';
 import {
   SafeAreaView,
@@ -28,37 +29,69 @@ const App: () => Node = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
   
-  const { IDWiseModule } = NativeModules;
+   
+    const { IDWiseModule } = NativeModules;
+   
 
-  useEffect(() => {
+  
+    if (Platform.OS === 'android') {
 
-    const eventEmitter = new NativeEventEmitter(NativeModules.IDWiseModule);
+      useEffect(() => {
+
+      const eventEmitter = new NativeEventEmitter(NativeModules.initialize);
+   
+       eventEmitter.addListener('onError', (event) => {
+         console.log(`An Error has occured  ${event.errorCode} : ${event.errorMessage}`); 
+       });
+   
+       eventEmitter.addListener('journeyStarted', (event) => {
+           console.log(`Journey Started with id ${event.journeyId}`); 
+       });
+   
+       eventEmitter.addListener('journeyCompleted', (event) => {
+         console.log(`Journey Completed with id ${event.journeyId} & isSuccess ${event.isSuccess}`);
+       });
+   
+       eventEmitter.addListener('journeyCancelled', (event) => {
+         console.log(`Journey Cancelled with id ${event.journeyId}`); 
+       });
+   
+   
+     }) 
+
+     }
+  
+     if (Platform.OS === 'ios') {
+      const eventEmitter = new NativeEventEmitter(IDWiseModule);
+
+      eventEmitter.addListener('journeyStarted', event =>
+        console.log(`Journey Started with id ${event.journeyId}`),
+      );
+
+      eventEmitter.addListener('journeyCancelled', event =>
+      console.log(`Journey Cancelled with id ${event.journeyId}`)
+    );
 
     eventEmitter.addListener('onError', (event) => {
       console.log(`An Error has occured  ${event.errorCode} : ${event.errorMessage}`); 
     });
 
-    eventEmitter.addListener('journeyStarted', (event) => {
-        console.log(`Journey Started with id ${event.journeyId}`); 
-    });
-
     eventEmitter.addListener('journeyCompleted', (event) => {
-      console.log(`Journey Completed with id ${event.journeyId} & isSuccess ${event.isSuccess}`);
+      console.log(`Journey Completed with id ${event.journeyId}`);
     });
 
-    eventEmitter.addListener('journeyCancelled', (event) => {
-      console.log(`Journey Cancelled with id ${event.journeyId}`); 
-    });
+     } 
+  
+  
 
-
-  })
-
-  const onPress = () => {
+  const onPress =  () => {
 
     //you can pre-load this on componentDidMount() if you want to
-    IDWiseModule.initialize("CLIENT_KEY");
 
-    IDWiseModule.startJourney("JOURNEY_DEFINITION_ID","","en");
+
+    IDWiseModule.initializeSDK("<YOUR_CLIENT_KEY>");
+    IDWiseModule.startJourney("<JOURNEY_DEFINITION_ID>","<REFERENCE_NO>","<LOCALE>");
+    
   };
 
   return (
@@ -79,7 +112,11 @@ const App: () => Node = () => {
           title="Click to start Verification!"
           style={styles.loginButton}
           color="#841584"
-          onPress={onPress}
+          onPress= {
+            () => {
+            onPress()
+            }
+            }
         />
       
       </View>
