@@ -15,6 +15,5 @@ RCT_EXTERN_METHOD(initializeSDK:(NSString *)clientKey)
 RCT_EXTERN_METHOD(startJourney:(NSString *)journeyDefinitionID
                   :(NSString *)referenceNo
                   :(NSString *)locale)
-RCT_EXTERN_METHOD(journeyStarted:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(supportedEvents)
 @end
