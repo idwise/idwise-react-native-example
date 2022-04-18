@@ -45,7 +45,7 @@ public class IDWiseModule extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
-    public void initialize(String clientKey) {
+    public void initializeSDK(String clientKey) {
 
         Function1<? super IDWiseSDKError, Unit> errorCallback = (Function1<IDWiseSDKError, Unit>) error -> {
 
@@ -83,7 +83,6 @@ public class IDWiseModule extends ReactContextBaseJavaModule {
             public void onJourneyCompleted(@NonNull JourneyInfo journeyInfo, boolean isCompleted) {
                 WritableMap params = Arguments.createMap();
                 params.putString("journeyId", journeyInfo.getJourneyId());
-                params.putBoolean("isSuccess", isCompleted);
                 sendEvent("journeyCompleted", params);
             }
 
