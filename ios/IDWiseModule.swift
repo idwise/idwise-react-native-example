@@ -43,7 +43,7 @@ class IDWiseModule: RCTEventEmitter  {
       }
     } else {
       DispatchQueue.main.async {
-        IDWise.startJourney(journeyDefinitionId: journeyDefinitionID,referenceNumber: locale,locale: locale, journeyDelegate: self)
+        IDWise.startJourney(journeyDefinitionId: journeyDefinitionID,referenceNumber: referenceNo,locale: locale, journeyDelegate: self)
       }
     }
   }
