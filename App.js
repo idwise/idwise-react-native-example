@@ -31,14 +31,10 @@ const App: () => Node = () => {
   
    
     const { IDWiseModule } = NativeModules;
-   
-
-  
-    if (Platform.OS === 'android') {
 
       useEffect(() => {
 
-      const eventEmitter = new NativeEventEmitter(NativeModules.initialize);
+      const eventEmitter = new NativeEventEmitter(IDWiseModule);
    
        eventEmitter.addListener('onError', (event) => {
          console.log(`An Error has occured  ${event.errorCode} : ${event.errorMessage}`); 
@@ -49,7 +45,7 @@ const App: () => Node = () => {
        });
    
        eventEmitter.addListener('journeyCompleted', (event) => {
-         console.log(`Journey Completed with id ${event.journeyId} & isSuccess ${event.isSuccess}`);
+         console.log(`Journey Completed with id ${event.journeyId}`);
        });
    
        eventEmitter.addListener('journeyCancelled', (event) => {
@@ -58,38 +54,13 @@ const App: () => Node = () => {
    
    
      }) 
-
-     }
-  
-     if (Platform.OS === 'ios') {
-      const eventEmitter = new NativeEventEmitter(IDWiseModule);
-
-      eventEmitter.addListener('journeyStarted', event =>
-        console.log(`Journey Started with id ${event.journeyId}`),
-      );
-
-      eventEmitter.addListener('journeyCancelled', event =>
-      console.log(`Journey Cancelled with id ${event.journeyId}`)
-    );
-
-    eventEmitter.addListener('onError', (event) => {
-      console.log(`An Error has occured  ${event.errorCode} : ${event.errorMessage}`); 
-    });
-
-    eventEmitter.addListener('journeyCompleted', (event) => {
-      console.log(`Journey Completed with id ${event.journeyId}`);
-    });
-
-     } 
-  
   
 
   const onPress =  () => {
 
     //you can pre-load this on componentDidMount() if you want to
-
-
     IDWiseModule.initializeSDK("<YOUR_CLIENT_KEY>");
+    
     IDWiseModule.startJourney("<JOURNEY_DEFINITION_ID>","<REFERENCE_NO>","<LOCALE>");
     
   };
